@@ -1,0 +1,24 @@
+{
+  "name": "mern-projects",
+  "version": "1.0.0",
+  "description": "It's my 1st project of MERN Projects Series.",
+  "main": "index.js",
+    "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/habibtariq513/MERN-Projects.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/habibtariq513/MERN-Projects/issues"
+  },
+  "homepage": "https://github.com/habibtariq513/MERN-Projects#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
