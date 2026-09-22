@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "It's my 1st project of MERN Projects Series.",
   "main": "index.js",
-    "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "scripts": {
+    "dev": "nodemon api/index.js",
+    "start": "node api/index.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/habibtariq513/MERN-Projects#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14"
   }
 }
