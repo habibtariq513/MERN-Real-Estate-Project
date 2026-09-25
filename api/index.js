@@ -17,11 +17,11 @@ app.listen(3000, () => {
     console.log("Server is running on Port 3000");
 });
 
+// It'll let the JSON data come to server
+ app.use(express.json());
+
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
-
-// It'll let the JSON data come to server
-app.use(express.json());
 
 // middleware 
 app.use((err, req, res, next) => {
