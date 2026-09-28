@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-export default function SignUp() {
+export default function SignIn() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ export default function SignUp() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch('/api/auth/signup', {
+      const res = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export default function SignUp() {
       setLoading(false);
       console.log(data);
       setError(null);
-      navigate('/sign-in');
+      navigate('/');
     } 
     catch (error) {
       setLoading(false);
@@ -46,24 +46,23 @@ export default function SignUp() {
   return (
     <div className="p-3 max-w-lg mx-auto">
 
-      <h1 className="text-3xl text-center font-semibold my-7">Sign Up</h1>
+      <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
-        <input type="text" placeholder="username" className="border p-3 rounded-lg" id="username" onChange={handleChange} />
         <input type="email" placeholder="email" className="border p-3 rounded-lg" id="email" onChange={handleChange} />
         <input type="password" placeholder="password" className="border p-3 rounded-lg" id="password" onChange={handleChange} />
 
         <button disabled={loading} className="bg-slate-700 text-white uppercase p-3 rounded-lg hover:opacity-95 disabled:opacity-80">
-          {loading ? 'Loading...' : 'Sign Up'}
+          {loading ? 'Loading...' : 'Sign In'}
         </button>
 
       </form>
 
       <div className='flex gap-2 mt-5'>
-        <p>Have an Account?</p>
-        <Link to={'/sign-in'}>
-          <span className='text-blue-700'>Sign-In</span>
+        <p>Do not have an Account?</p>
+        <Link to={'/sign-up'}>
+          <span className='text-blue-700'>Sign-up</span>
         </Link>
 
         {/* -------- For Error -------- */}
