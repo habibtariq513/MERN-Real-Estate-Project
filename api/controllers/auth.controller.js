@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 export const signup = async (req, res, next) => {
     const { username, email, password } = req.body;
-    const hashedPassword = bcrypt.hashSync(password, 10);
+    const hashedPassword = bcryptjs.hashSync(password, 10);
     const newUser = new User({ username, email, password: hashedPassword });
     try {
         await newUser.save();
@@ -20,7 +20,7 @@ export const signin = async (req, res, next) => {
     try {
         const validUser = await User.findOne({ email });
         if (!validUser) return next(errorHandler(404, "User not Found!"));
-        const validPassword = bcrypt.compareSync(password, validUser.password);
+        const validPassword = bcryptjs.compareSync(password, validUser.password);
         if (!validPassword) return next(errorHandler(401, "Wrong Credentials!"));
 
         // password hiding through destructuring
