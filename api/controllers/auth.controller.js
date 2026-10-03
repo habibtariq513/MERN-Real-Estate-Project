@@ -29,7 +29,7 @@ export const signin = async (req, res, next) => {
         // Cookie Setup
         const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
         res
-            .cookie("access_token", token, { httpOnly: true })
+            .cookie("access_token", token, { httpOnly: true, path: "/" })
             .status(200)
             .json(rest);
     } catch (error) {
@@ -44,7 +44,7 @@ export const google = async (req, res, next) => {
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
             const { password: pass, ...rest } = user._doc;
             res
-                .cookie("access_token", token, { httpOnly: true })
+                .cookie("access_token", token, { httpOnly: true, path: "/" })
                 .status(200)
                 .json(rest);
         } else {
@@ -65,7 +65,7 @@ export const google = async (req, res, next) => {
             const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
             const { password: pass, ...rest } = newUser._doc;
             res
-                .cookie("access_token", token, { httpOnly: true })
+                .cookie("access_token", token, { httpOnly: true, path: "/" })
                 .status(200)
                 .json(rest);
         }
