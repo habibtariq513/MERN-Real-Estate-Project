@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   updateUserStart,
   updateUserSuccess,
@@ -251,6 +252,15 @@ export default function Profile() {
         >
           Sign Out
         </span>
+      </div>
+
+      <div className="mt-5 flex justify-center">
+        <Link
+          to="/create-listing"
+          className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95"
+        >
+          CREATE LISTING
+        </Link>
       </div>
     </div>
   );
