@@ -4,6 +4,9 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserStart,
+  deleteUserFailure,
+  deleteUserSuccess,
 } from "../../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 
@@ -44,7 +47,9 @@ export default function Profile() {
         try {
           const uploadedImageData = JSON.parse(xhr.responseText);
           if (!uploadedImageData.secure_url) {
-            throw new Error("The image upload response did not include an image URL.");
+            throw new Error(
+              "The image upload response did not include an image URL.",
+            );
           }
           setFormData((previous) => ({
             ...previous,
@@ -62,7 +67,9 @@ export default function Profile() {
 
     xhr.addEventListener("error", () => {
       setIsUploading(false);
-      setFileUploadError("Image upload failed. Please check your connection and try again.");
+      setFileUploadError(
+        "Image upload failed. Please check your connection and try again.",
+      );
       setFilePerc(0);
     });
 
@@ -98,7 +105,9 @@ export default function Profile() {
 
       const data = await res.json();
       if (!res.ok || data.success === false) {
-        throw new Error(data.message || `Profile update failed (${res.status}).`);
+        throw new Error(
+          data.message || `Profile update failed (${res.status}).`,
+        );
       }
 
       dispatch(updateUserSuccess(data));
@@ -107,6 +116,24 @@ export default function Profile() {
     } catch (error) {
       dispatch(updateUserFailure(error.message));
     }
+  };
+
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+     }
   };
 
   return (
@@ -133,7 +160,9 @@ export default function Profile() {
 
         <p className="text-sm self-center">
           {fileUploadError ? (
-            <span className="text-red-700" role="alert">{fileUploadError}</span>
+            <span className="text-red-700" role="alert">
+              {fileUploadError}
+            </span>
           ) : filePerc > 0 && filePerc < 100 ? (
             <span className="text-slate-700">{`Uploading ${filePerc}%`}</span>
           ) : filePerc === 100 ? (
@@ -172,16 +201,31 @@ export default function Profile() {
           disabled={loading || isUploading}
           className="bg-slate-700 text-white rounded-lg p-3 uppercase cursor-pointer hover:opacity-95 disabled:opacity-80"
         >
-          {loading ? "Updating..." : isUploading ? "Uploading image..." : "Update"}
+          {loading
+            ? "Updating..."
+            : isUploading
+              ? "Uploading image..."
+              : "Update"}
         </button>
-        {error && <p className="text-red-700" role="alert">{error}</p>}
+        {error && (
+          <p className="text-red-700" role="alert">
+            {error}
+          </p>
+        )}
         {updateSuccess && (
-          <p className="text-green-700" role="status">Profile updated successfully.</p>
+          <p className="text-green-700" role="status">
+            Profile updated successfully.
+          </p>
         )}
       </form>
 
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete Account</span>
+        <span
+          onClick={handleDeleteUser}
+          className="text-red-700 cursor-pointer"
+        >
+          Delete Account
+        </span>
         <span className="text-red-700 cursor-pointer">Sign Out</span>
       </div>
     </div>
