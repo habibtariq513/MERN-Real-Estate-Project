@@ -24,6 +24,7 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showListingsError, setShowListingsError] = useState(false);
+  const [listingDeleteError, setListingDeleteError] = useState("");
   const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
 
@@ -43,6 +44,32 @@ export default function Profile() {
       setUserListings(data);
     } catch {
       setShowListingsError(true);
+    }
+  };
+
+  const handleListingDelete = async (listingId) => {
+    setListingDeleteError("");
+
+    try {
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      const data = await res.json();
+
+      if (!res.ok || data.success === false) {
+        throw new Error(
+          typeof data === "string"
+            ? data
+            : data.message || "Unable to delete listing.",
+        );
+      }
+
+      setUserListings((previous) =>
+        previous.filter((listing) => listing._id !== listingId),
+      );
+    } catch (deleteError) {
+      setListingDeleteError(deleteError.message);
     }
   };
 
@@ -270,6 +297,11 @@ export default function Profile() {
       <p className="text-red-700 mt-2 text-sm" role="alert">
         {showListingsError ? "Error showing listings" : ""}
       </p>
+      {listingDeleteError && (
+        <p className="text-red-700 mt-2 text-sm" role="alert">
+          {listingDeleteError}
+        </p>
+      )}
 
       {userListings.length > 0 && (
         <div className="flex flex-col gap-4 mt-6">
@@ -296,6 +328,7 @@ export default function Profile() {
 
               <div className="flex flex-col items-center gap-1">
                 <button
+                  onClick={() => handleListingDelete(listing._id)}
                   type="button"
                   className="text-red-700 uppercase text-xs hover:opacity-75"
                 >
