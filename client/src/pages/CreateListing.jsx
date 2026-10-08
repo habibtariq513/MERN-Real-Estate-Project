@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const CLOUDINARY_UPLOAD_URL =
   "https://api.cloudinary.com/v1_1/utrwkdln/image/upload";
@@ -26,10 +26,11 @@ const storeImage = async (file) => {
   return result.secure_url;
 };
 
-export default function CreateListing() {
+export function ListingForm({ isUpdate = false }) {
   const fileInputRef = useRef(null);
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const params = useParams();
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
     imageUrls: [],
@@ -49,6 +50,45 @@ export default function CreateListing() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fetchingListing, setFetchingListing] = useState(isUpdate);
+
+  useEffect(() => {
+    if (!isUpdate) return undefined;
+
+    let ignore = false;
+    const fetchListing = async () => {
+      setFetchingListing(true);
+      setError(false);
+
+      try {
+        const res = await fetch(`/api/listing/get/${params.listingId}`);
+        const data = await res.json();
+
+        if (!res.ok || data.success === false) {
+          throw new Error(data.message || "Unable to load listing.");
+        }
+        if (!ignore) {
+          setFormData({
+            ...data,
+            imageUrls: Array.isArray(data.imageUrls) ? data.imageUrls : [],
+          });
+        }
+      } catch (fetchError) {
+        if (!ignore) {
+          setError(fetchError.message);
+        }
+      } finally {
+        if (!ignore) {
+          setFetchingListing(false);
+        }
+      }
+    };
+
+    fetchListing();
+    return () => {
+      ignore = true;
+    };
+  }, [isUpdate, params.listingId]);
 
   const handleChange = (e) => {
     const { id, checked, type, value } = e.target;
@@ -113,17 +153,22 @@ export default function CreateListing() {
     setError(false);
 
     try {
-      const res = await fetch("/api/listing/create", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        isUpdate
+          ? `/api/listing/update/${params.listingId}`
+          : "/api/listing/create",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            userRef: currentUser._id,
+          }),
         },
-        body: JSON.stringify({
-          ...formData,
-          userRef: currentUser._id,
-        }),
-      });
+      );
       const data = await res.json();
       setLoading(false);
 
@@ -139,10 +184,23 @@ export default function CreateListing() {
     }
   };
 
+  if (isUpdate && !formData._id) {
+    return (
+      <main className="p-3 max-w-4xl mx-auto">
+        <h1 className="text-3xl font-semibold text-center my-7">
+          Update a Listing
+        </h1>
+        <p className="text-center text-red-700" role="alert">
+          {fetchingListing ? "Loading listing..." : error || "Listing not found."}
+        </p>
+      </main>
+    );
+  }
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
-        Create a Listing
+        {isUpdate ? "Update a Listing" : "Create a Listing"}
       </h1>
       <form
         onSubmit={handleSubmit}
@@ -345,14 +403,24 @@ export default function CreateListing() {
               </div>
             ))}
           <button
-            disabled={loading || uploading}
+            disabled={loading || uploading || fetchingListing}
             className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
           >
-            {loading ? "Creating..." : "Create Listing"}
+            {loading
+              ? isUpdate
+                ? "Updating..."
+                : "Creating..."
+              : isUpdate
+                ? "Update Listing"
+                : "Create Listing"}
           </button>
           {error && <p className="text-red-700 text-sm">{error}</p>}
         </div>
       </form>
     </main>
   );
+}
+
+export default function CreateListing() {
+  return <ListingForm />;
 }
