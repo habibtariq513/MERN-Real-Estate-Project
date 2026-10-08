@@ -263,7 +263,7 @@ export default function Profile() {
       <button
         type="button"
         onClick={handleShowListings}
-        className="text-green-700 w-full mt-5"
+        className="text-green-700 w-full mt-5 cursor-pointer"
       >
         Show Listings
       </button>
