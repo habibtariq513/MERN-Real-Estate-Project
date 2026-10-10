@@ -138,134 +138,175 @@ export default function Search() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <div className="p-7 border-b-2 md:border-b-0 md:border-r-2 md:min-h-screen">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-          <div className="flex items-center gap-2">
-            <label
-              htmlFor="searchTerm"
-              className="whitespace-nowrap font-semibold"
-            >
-              Search Term:
-            </label>
-            <input
-              type="text"
-              id="searchTerm"
-              placeholder="Search..."
-              className="border rounded-lg p-3 w-full"
-              value={sidebarData.searchTerm}
-              onChange={handleChange}
-            />
+    <div className="min-h-screen bg-slate-50 md:flex">
+      <aside className="border-b border-slate-200 bg-white md:w-[340px] md:shrink-0 md:border-b-0 md:border-r">
+        <div className="mx-auto max-w-2xl p-5 sm:p-7 md:sticky md:top-20 md:max-w-none">
+          <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
+            Sahand Estate
+          </p>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+            Find your next place
+          </h1>
+          <p className="mt-2 text-sm leading-relaxed text-slate-500">
+            Set your preferences to discover homes that fit your lifestyle.
+          </p>
+
+          <form onSubmit={handleSubmit} className="mt-7 flex flex-col gap-6">
+            <div>
+              <label
+                htmlFor="searchTerm"
+                className="mb-2 block text-sm font-semibold text-slate-700"
+              >
+                Search area or keyword
+              </label>
+              <input
+                type="text"
+                id="searchTerm"
+                placeholder="Try a neighborhood or keyword"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-emerald-600 focus:bg-white focus:ring-4 focus:ring-emerald-100"
+                value={sidebarData.searchTerm}
+                onChange={handleChange}
+              />
+            </div>
+
+            <fieldset>
+              <legend className="mb-3 text-sm font-semibold text-slate-700">
+                Property type
+              </legend>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { id: "all", label: "Rent & Sale", checked: sidebarData.type === "all" },
+                  { id: "rent", label: "Rent", checked: sidebarData.type === "rent" },
+                  { id: "sale", label: "Sale", checked: sidebarData.type === "sale" },
+                ].map(({ id, label, checked }) => (
+                  <label
+                    key={id}
+                    htmlFor={id}
+                    className={`cursor-pointer rounded-full border px-3 py-2 text-sm font-medium transition ${
+                      checked
+                        ? "border-emerald-700 bg-emerald-50 text-emerald-800"
+                        : "border-slate-200 bg-white text-slate-600 hover:border-emerald-300"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      id={id}
+                      className="sr-only"
+                      onChange={handleChange}
+                      checked={checked}
+                    />
+                    {label}
+                  </label>
+                ))}
+              </div>
+              <label
+                htmlFor="offer"
+                className="mt-3 flex cursor-pointer items-center gap-2 text-sm text-slate-600"
+              >
+                <input
+                  type="checkbox"
+                  id="offer"
+                  className="h-4 w-4 rounded accent-emerald-700"
+                  onChange={handleChange}
+                  checked={sidebarData.offer}
+                />
+                Show special offers
+              </label>
+            </fieldset>
+
+            <fieldset>
+              <legend className="mb-3 text-sm font-semibold text-slate-700">
+                Amenities
+              </legend>
+              <div className="flex flex-col gap-3">
+                {[
+                  { id: "parking", label: "Parking available", checked: sidebarData.parking },
+                  { id: "furnished", label: "Furnished", checked: sidebarData.furnished },
+                ].map(({ id, label, checked }) => (
+                  <label
+                    key={id}
+                    htmlFor={id}
+                    className="flex cursor-pointer items-center gap-2 text-sm text-slate-600"
+                  >
+                    <input
+                      type="checkbox"
+                      id={id}
+                      className="h-4 w-4 rounded accent-emerald-700"
+                      onChange={handleChange}
+                      checked={checked}
+                    />
+                    {label}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            <div>
+              <label
+                htmlFor="sort_order"
+                className="mb-2 block text-sm font-semibold text-slate-700"
+              >
+                Sort results
+              </label>
+              <select
+                id="sort_order"
+                onChange={handleChange}
+                value={`${sidebarData.sort}_${sidebarData.order}`}
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
+              >
+                <option value="regularPrice_desc">Price: high to low</option>
+                <option value="regularPrice_asc">Price: low to high</option>
+                <option value="createdAt_desc">Newest first</option>
+                <option value="createdAt_asc">Oldest first</option>
+              </select>
+            </div>
+
+            <button className="rounded-xl bg-emerald-700 px-5 py-3.5 text-sm font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-emerald-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700">
+              Search listings
+            </button>
+          </form>
+        </div>
+      </aside>
+
+      <main className="min-w-0 flex-1">
+        <div className="border-b border-slate-200 bg-white px-5 py-7 sm:px-8">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="mb-1 text-sm font-medium text-emerald-700">
+                Explore properties
+              </p>
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                Listing results
+              </h2>
+            </div>
+            {!loading && !error && (
+              <p className="text-sm text-slate-500">
+                {listings.length} {listings.length === 1 ? "property" : "properties"} found
+              </p>
+            )}
           </div>
+        </div>
 
-          <div className="flex gap-2 flex-wrap items-center">
-            <span className="font-semibold">Type:</span>
-            <div className="flex gap-2 items-center">
-              <input
-                type="checkbox"
-                id="all"
-                className="w-5"
-                onChange={handleChange}
-                checked={sidebarData.type === "all"}
-              />
-              <label htmlFor="all">Rent &amp; Sale</label>
-            </div>
-            <div className="flex gap-2 items-center">
-              <input
-                type="checkbox"
-                id="rent"
-                className="w-5"
-                onChange={handleChange}
-                checked={sidebarData.type === "rent"}
-              />
-              <label htmlFor="rent">Rent</label>
-            </div>
-            <div className="flex gap-2 items-center">
-              <input
-                type="checkbox"
-                id="sale"
-                className="w-5"
-                onChange={handleChange}
-                checked={sidebarData.type === "sale"}
-              />
-              <label htmlFor="sale">Sale</label>
-            </div>
-            <div className="flex gap-2 items-center">
-              <input
-                type="checkbox"
-                id="offer"
-                className="w-5"
-                onChange={handleChange}
-                checked={sidebarData.offer}
-              />
-              <label htmlFor="offer">Offer</label>
-            </div>
-          </div>
-
-          <div className="flex gap-2 flex-wrap items-center">
-            <span className="font-semibold">Amenities:</span>
-            <div className="flex gap-2 items-center">
-              <input
-                type="checkbox"
-                id="parking"
-                className="w-5"
-                onChange={handleChange}
-                checked={sidebarData.parking}
-              />
-              <label htmlFor="parking">Parking</label>
-            </div>
-            <div className="flex gap-2 items-center">
-              <input
-                type="checkbox"
-                id="furnished"
-                className="w-5"
-                onChange={handleChange}
-                checked={sidebarData.furnished}
-              />
-              <label htmlFor="furnished">Furnished</label>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <label htmlFor="sort_order" className="font-semibold">
-              Sort:
-            </label>
-            <select
-              id="sort_order"
-              onChange={handleChange}
-              value={`${sidebarData.sort}_${sidebarData.order}`}
-              className="border rounded-lg p-3"
-            >
-              <option value="regularPrice_desc">Price high to low</option>
-              <option value="regularPrice_asc">Price low to high</option>
-              <option value="createdAt_desc">Latest</option>
-              <option value="createdAt_asc">Oldest</option>
-            </select>
-          </div>
-
-          <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95">
-            Search
-          </button>
-        </form>
-      </div>
-
-      <div className="flex-1">
-        <h1 className="text-3xl font-semibold border-b p-3 text-slate-700 mt-5">
-          Listing results:
-        </h1>
-        <div className="p-7 flex flex-wrap gap-4">
+        <div className="mx-auto flex max-w-7xl flex-wrap justify-center gap-5 p-5 sm:justify-start sm:p-8">
           {loading && (
-            <p className="text-xl text-slate-700 text-center w-full" role="status">
-              Loading...
+            <p className="w-full py-16 text-center text-lg font-medium text-slate-600" role="status">
+              Finding properties for you...
             </p>
           )}
           {!loading && error && (
-            <p className="text-xl text-red-700" role="alert">
+            <p className="w-full rounded-xl border border-red-200 bg-red-50 p-5 text-red-700" role="alert">
               {error}
             </p>
           )}
           {!loading && !error && listings.length === 0 && (
-            <p className="text-xl text-slate-700">No listing found!</p>
+            <div className="w-full rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
+              <h3 className="text-lg font-semibold text-slate-800">
+                No properties found
+              </h3>
+              <p className="mt-2 text-sm text-slate-500">
+                Try changing your search term or relaxing a filter.
+              </p>
+            </div>
           )}
           {!loading &&
             !error &&
@@ -276,13 +317,13 @@ export default function Search() {
             <button
               type="button"
               onClick={onShowMoreClick}
-              className="text-green-700 hover:underline p-7 text-center w-full"
+              className="w-full rounded-xl border border-emerald-700 bg-white px-5 py-3 font-semibold text-emerald-800 transition hover:bg-emerald-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700"
             >
-              Show more
+              Show more properties
             </button>
           )}
         </div>
-      </div>
+      </main>
     </div>
   );
 }
