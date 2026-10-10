@@ -36,6 +36,7 @@ export default function Search() {
   );
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
+  const [showMore, setShowMore] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -47,6 +48,7 @@ export default function Search() {
     let ignore = false;
     const fetchListings = async () => {
       setLoading(true);
+      setShowMore(false);
       setError("");
 
       try {
@@ -59,10 +61,12 @@ export default function Search() {
 
         if (!ignore) {
           setListings(data);
+          setShowMore(data.length > 8);
         }
       } catch (fetchError) {
         if (!ignore) {
           setListings([]);
+          setShowMore(false);
           setError(fetchError.message);
         }
       } finally {
@@ -114,6 +118,23 @@ export default function Search() {
     urlParams.set("sort", sidebarData.sort);
     urlParams.set("order", sidebarData.order);
     navigate(`/search?${urlParams.toString()}`);
+  };
+
+  const onShowMoreClick = async () => {
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("startIndex", String(listings.length));
+
+    try {
+      const response = await fetch(`/api/listing/get?${urlParams.toString()}`);
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        setListings((previous) => [...previous, ...data]);
+        setShowMore(data.length > 8);
+      }
+    } catch {
+      setShowMore(false);
+    }
   };
 
   return (
@@ -251,6 +272,15 @@ export default function Search() {
             listings.map((listing) => (
               <ListingItem key={listing._id} listing={listing} />
             ))}
+          {showMore && (
+            <button
+              type="button"
+              onClick={onShowMoreClick}
+              className="text-green-700 hover:underline p-7 text-center w-full"
+            >
+              Show more
+            </button>
+          )}
         </div>
       </div>
     </div>
