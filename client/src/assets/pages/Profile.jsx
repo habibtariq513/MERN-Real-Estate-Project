@@ -205,170 +205,238 @@ export default function Profile() {
   };
 
   return (
-    <div className="p-3 max-w-lg mx-auto">
-      <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
-
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
-          onChange={(e) => {
-            const selectedFile = e.target.files?.[0];
-            if (selectedFile) handleFileUpload(selectedFile);
-          }}
-          type="file"
-          ref={fileRef}
-          hidden
-          accept="image/*"
-        />
-        <img
-          onClick={() => fileRef.current?.click()}
-          src={formData.avatar || currentUser.avatar}
-          alt="profile"
-          className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
-        />
-
-        <p className="text-sm self-center">
-          {fileUploadError ? (
-            <span className="text-red-700" role="alert">
-              {fileUploadError}
-            </span>
-          ) : filePerc > 0 && filePerc < 100 ? (
-            <span className="text-slate-700">{`Uploading ${filePerc}%`}</span>
-          ) : filePerc === 100 ? (
-            <span className="text-green-700">Image successfully uploaded!</span>
-          ) : (
-            ""
-          )}
-        </p>
-
-        <input
-          type="text"
-          placeholder="username"
-          value={formData.username ?? currentUser.username ?? ""}
-          id="username"
-          className="border p-3 rounded-lg"
-          onChange={handleChange}
-        />
-        <input
-          type="email"
-          placeholder="email"
-          value={formData.email ?? currentUser.email ?? ""}
-          id="email"
-          className="border p-3 rounded-lg"
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          placeholder="password"
-          value={formData.password ?? ""}
-          id="password"
-          className="border p-3 rounded-lg"
-          onChange={handleChange}
-        />
-
-        <button
-          disabled={loading || isUploading}
-          className="bg-slate-700 text-white rounded-lg p-3 uppercase cursor-pointer hover:opacity-95 disabled:opacity-80"
-        >
-          {loading
-            ? "Updating..."
-            : isUploading
-              ? "Uploading image..."
-              : "Update"}
-        </button>
-        {error && (
-          <p className="text-red-700" role="alert">
-            {error}
+    <main className="min-h-screen bg-slate-50 px-4 py-10 sm:py-14">
+      <div className="mx-auto max-w-6xl">
+        <header className="mb-8">
+          <p className="mb-2 text-sm font-bold uppercase tracking-[0.18em] text-emerald-700">
+            Sahand Estate
           </p>
-        )}
-        {updateSuccess && (
-          <p className="text-green-700" role="status">
-            Profile updated successfully.
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+            Your profile
+          </h1>
+          <p className="mt-2 text-slate-500">
+            Manage your account details and property listings.
           </p>
-        )}
-      </form>
+        </header>
 
-      <button
-        type="button"
-        onClick={handleShowListings}
-        className="text-green-700 w-full mt-5 cursor-pointer"
-      >
-        Show Listings
-      </button>
-      <p className="text-red-700 mt-2 text-sm" role="alert">
-        {showListingsError ? "Error showing listings" : ""}
-      </p>
-      {listingDeleteError && (
-        <p className="text-red-700 mt-2 text-sm" role="alert">
-          {listingDeleteError}
-        </p>
-      )}
-
-      {userListings.length > 0 && (
-        <div className="flex flex-col gap-4 mt-6">
-          <h2 className="text-center text-2xl font-semibold">Your Listings</h2>
-          {userListings.map((listing) => (
-            <div
-              key={listing._id}
-              className="border rounded-lg p-3 flex justify-between items-center gap-4 bg-white shadow-sm"
-            >
-              <Link to={`/listing/${listing._id}`}>
-                <img
-                  src={listing.imageUrls[0]}
-                  alt="listing cover"
-                  className="h-16 w-16 object-contain rounded-md"
-                />
-              </Link>
-
-              <Link
-                className="text-slate-700 font-semibold hover:underline truncate flex-1"
-                to={`/listing/${listing._id}`}
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+            <div className="mb-7 flex flex-col items-center border-b border-slate-100 pb-6">
+              <input
+                onChange={(e) => {
+                  const selectedFile = e.target.files?.[0];
+                  if (selectedFile) handleFileUpload(selectedFile);
+                }}
+                type="file"
+                ref={fileRef}
+                hidden
+                accept="image/*"
+              />
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                aria-label="Change profile photo"
+                className="group relative rounded-full p-1 ring-4 ring-emerald-50 transition hover:ring-emerald-100 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-700"
               >
-                <p>{listing.name}</p>
-              </Link>
-
-              <div className="flex flex-col items-center gap-1">
-                <button
-                  onClick={() => handleListingDelete(listing._id)}
-                  type="button"
-                  className="text-red-700 uppercase text-xs hover:opacity-75"
-                >
-                  Delete
-                </button>
-                <Link
-                  to={`/update-listing/${listing._id}`}
-                  className="text-green-700 uppercase text-xs hover:opacity-75"
-                >
-                  Edit
-                </Link>
-              </div>
+                <img
+                  src={formData.avatar || currentUser.avatar}
+                  alt={`${currentUser.username || "User"} profile`}
+                  className="h-24 w-24 rounded-full object-cover"
+                />
+                <span className="absolute inset-1 flex items-end justify-center rounded-full bg-gradient-to-t from-black/60 to-transparent pb-2 text-xs font-semibold text-white opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100">
+                  Change
+                </span>
+              </button>
+              <p className="mt-3 text-sm font-medium text-slate-500">
+                Click your photo to update it
+              </p>
+              {(fileUploadError || (filePerc > 0 && filePerc < 100) || filePerc === 100) && (
+                <p className="mt-2 text-sm" role={fileUploadError ? "alert" : "status"}>
+                  {fileUploadError ? (
+                    <span className="text-red-700">{fileUploadError}</span>
+                  ) : filePerc < 100 ? (
+                    <span className="text-slate-600">{`Uploading ${filePerc}%`}</span>
+                  ) : (
+                    <span className="text-emerald-700">Profile photo uploaded.</span>
+                  )}
+                </p>
+              )}
             </div>
-          ))}
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <div>
+                <label htmlFor="username" className="mb-2 block text-sm font-semibold text-slate-700">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  placeholder="Username"
+                  value={formData.username ?? currentUser.username ?? ""}
+                  id="username"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-4 focus:ring-emerald-100"
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="mb-2 block text-sm font-semibold text-slate-700">
+                  Email address
+                </label>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={formData.email ?? currentUser.email ?? ""}
+                  id="email"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-4 focus:ring-emerald-100"
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="mb-2 block text-sm font-semibold text-slate-700">
+                  New password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Leave blank to keep your current password"
+                  value={formData.password ?? ""}
+                  id="password"
+                  autoComplete="new-password"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition placeholder:text-sm focus:border-emerald-600 focus:bg-white focus:ring-4 focus:ring-emerald-100"
+                  onChange={handleChange}
+                />
+              </div>
+
+              {error && (
+                <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
+                  {error}
+                </p>
+              )}
+              {updateSuccess && (
+                <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800" role="status">
+                  Profile updated successfully.
+                </p>
+              )}
+
+              <button
+                disabled={loading || isUploading}
+                className="rounded-xl bg-emerald-700 px-5 py-3.5 font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-emerald-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {loading
+                  ? "Updating..."
+                  : isUploading
+                    ? "Uploading image..."
+                    : "Save profile"}
+              </button>
+            </form>
+          </section>
+
+          <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+            <h2 className="text-lg font-bold text-slate-900">Account actions</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Manage your properties and account access.
+            </p>
+            <div className="mt-5 flex flex-col gap-3">
+              <button
+                type="button"
+                onClick={handleShowListings}
+                className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-100"
+              >
+                Show my listings
+              </button>
+              <Link
+                to="/create-listing"
+                className="rounded-xl bg-emerald-700 px-4 py-3 text-center text-sm font-bold text-white shadow-sm transition hover:bg-emerald-800"
+              >
+                Create a listing
+              </Link>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+              >
+                Sign out
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteUser}
+                className="rounded-xl border border-red-200 px-4 py-3 text-sm font-semibold text-red-700 transition hover:bg-red-50"
+              >
+                Delete account
+              </button>
+            </div>
+          </aside>
         </div>
-      )}
 
-      <div className="flex justify-between mt-5">
-        <span
-          onClick={handleDeleteUser}
-          className="text-red-700 cursor-pointer"
-        >
-          Delete Account
-        </span>
-        <span
-          onClick={handleSignOut}
-          className="text-red-700 cursor-pointer"
-        >
-          Sign Out
-        </span>
-      </div>
+        {(showListingsError || listingDeleteError) && (
+          <div className="mt-5 space-y-2" role="alert">
+            {showListingsError && (
+              <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                Unable to load your listings. Please try again.
+              </p>
+            )}
+            {listingDeleteError && (
+              <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {listingDeleteError}
+              </p>
+            )}
+          </div>
+        )}
 
-      <div className="mt-5 flex justify-center">
-        <Link
-          to="/create-listing"
-          className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95"
-        >
-          CREATE LISTING
-        </Link>
+        {userListings.length > 0 && (
+          <section className="mt-8">
+            <div className="mb-4">
+              <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-700">
+                Your properties
+              </p>
+              <h2 className="mt-1 text-2xl font-bold text-slate-900">
+                Your listings
+              </h2>
+            </div>
+            <div className="flex flex-col gap-3">
+              {userListings.map((listing) => (
+                <article
+                  key={listing._id}
+                  className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:p-4"
+                >
+                  <Link
+                    to={`/listing/${listing._id}`}
+                    className="shrink-0 overflow-hidden rounded-xl"
+                  >
+                    <img
+                      src={listing.imageUrls?.[0]}
+                      alt={`${listing.name} cover`}
+                      className="h-16 w-16 object-cover transition-transform hover:scale-105 sm:h-20 sm:w-20"
+                    />
+                  </Link>
+                  <Link
+                    className="min-w-0 flex-1 font-semibold text-slate-800 hover:text-emerald-800"
+                    to={`/listing/${listing._id}`}
+                  >
+                    <p className="truncate">{listing.name}</p>
+                    <p className="mt-1 truncate text-sm font-normal text-slate-500">
+                      {listing.address}
+                    </p>
+                  </Link>
+                  <div className="flex shrink-0 flex-col items-end gap-2 sm:flex-row sm:items-center sm:gap-4">
+                    <Link
+                      to={`/update-listing/${listing._id}`}
+                      className="text-xs font-bold uppercase text-emerald-700 hover:text-emerald-900"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      onClick={() => handleListingDelete(listing._id)}
+                      type="button"
+                      className="text-xs font-bold uppercase text-red-600 hover:text-red-800"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
-    </div>
+    </main>
   );
 }
