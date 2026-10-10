@@ -4,7 +4,7 @@ import { MdLocationOn } from "react-icons/md";
 const defaultImage =
   "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80";
 
-export default function ListingItem({ listing }) {
+export default function ListingItem({ listing, showImage = true }) {
   const imageUrl = listing.imageUrls?.[0] || defaultImage;
   const price = Number(
     listing.offer ? listing.discountPrice : listing.regularPrice,
@@ -15,11 +15,13 @@ export default function ListingItem({ listing }) {
       to={`/listing/${listing._id}`}
       className="bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px]"
     >
-      <img
-        src={imageUrl}
-        alt={listing.name ? `${listing.name} listing cover` : "Listing cover"}
-        className="h-[320px] sm:h-[220px] w-full object-cover hover:scale-105 transition-transform duration-300"
-      />
+      {showImage && (
+        <img
+          src={imageUrl}
+          alt={listing.name ? `${listing.name} listing cover` : "Listing cover"}
+          className="h-[320px] sm:h-[220px] w-full object-cover hover:scale-105 transition-transform duration-300"
+        />
+      )}
       <div className="p-3 flex flex-col gap-2 w-full">
         <p className="truncate text-lg font-semibold text-slate-700">
           {listing.name}
