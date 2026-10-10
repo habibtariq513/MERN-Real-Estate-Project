@@ -4,6 +4,7 @@ import { app } from '../firebase';
 import { useDispatch } from 'react-redux';
 import { signInSuccess } from '../redux/user/userSlice';
 import {useNavigate} from 'react-router-dom';
+import { FcGoogle } from 'react-icons/fc';
 
 export default function OAuth() {
     const [errorMessage, setErrorMessage] = useState('');
@@ -44,8 +45,9 @@ export default function OAuth() {
         <button
             onClick={handleGoogleClick}
             type="button"
-            className="bg-red-700 text-white p-3 rounded-lg uppercase hover: opacity-95"
+            className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-3.5 font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700"
         >
+            <FcGoogle aria-hidden="true" className="text-xl" />
             Continue with Google
         </button>
         {errorMessage && <p className="text-red-700 text-sm" role="alert">Google sign-in failed: {errorMessage}</p>}
