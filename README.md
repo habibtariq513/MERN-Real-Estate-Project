@@ -1,6 +1,6 @@
 <div align="center">
 
-# Sahand Estate
+# 🏡 Real Estate Project
 
 ### Find a place to call home.
 
@@ -8,7 +8,7 @@ Explore homes for sale and rent, discover properties that match your needs, and 
 
 <br />
 
-<a href="https://mernrealestateproject-dif0ckw0.b4a.run/"><strong>Visit the live website →</strong></a>
+<a href="https://mernrealestateproject-dif0ckw0.b4a.run/"><strong>🌐 Visit the live website →</strong></a>
 
 <br /><br />
 
@@ -21,23 +21,23 @@ Explore homes for sale and rent, discover properties that match your needs, and 
 
 ---
 
-## Welcome to Sahand Estate
+## 🏠 Welcome to Real Estate Project
 
-Sahand Estate is a full-stack real-estate marketplace built with the MERN stack. Browse property listings, filter your search, and create an account to publish and manage your own homes.
+Real Estate Project is a full-stack real-estate marketplace built with the MERN stack. Browse property listings, filter your search, and create an account to publish and manage your own homes.
 
-Whether you are looking for a rental or your next home, Sahand Estate makes it easy to explore available properties and connect with listing details.
+Whether you are looking for a rental or your next home, Real Estate Project makes it easy to explore available properties and connect with listing details.
 
-## What you can do
+## ✨ What you can do
 
-- **Explore listings** for both sale and rent.
-- **Search and filter properties** by listing type, special offers, parking, and furnishing.
-- **View property details** and browse listing photos.
-- **Create and update listings** with property details, pricing, and features.
-- **Upload listing and profile images** to Cloudinary.
-- **Manage your account and listings** from your profile.
-- **Sign in with email and password or Google.**
+- 🏘️ **Explore listings** for both sale and rent.
+- 🔎 **Search and filter properties** by listing type, special offers, parking, and furnishing.
+- 🖼️ **View property details** and browse listing photos.
+- 📝 **Create and update listings** with property details, pricing, and features.
+- ☁️ **Upload listing and profile images** to Cloudinary.
+- 👤 **Manage your account and listings** from your profile.
+- 🔐 **Sign in with email and password or Google.**
 
-## Built with
+## 🧰 Built with
 
 | Area | Technologies |
 | --- | --- |
@@ -47,14 +47,14 @@ Whether you are looking for a rental or your next home, Sahand Estate makes it e
 | Authentication | JWT, Firebase Authentication for Google sign-in |
 | Image hosting | Cloudinary |
 
-## Run it locally
+## 🚀 Run it locally
 
-### Prerequisites
+### 📋 Prerequisites
 
 - Node.js and npm
 - A MongoDB connection string
 
-### 1. Install dependencies
+### 1️⃣ Install dependencies
 
 From the project root:
 
@@ -63,7 +63,7 @@ npm install
 npm install --prefix client
 ```
 
-### 2. Configure the API
+### 2️⃣ Configure the API
 
 Create a `.env` file in the project root:
 
@@ -74,7 +74,7 @@ JWT_SECRET=replace_with_a_long_random_secret
 
 Keep real credentials private and do not commit your `.env` file.
 
-### 3. Start the backend
+### 3️⃣ Start the backend
 
 In a terminal at the project root:
 
@@ -84,7 +84,7 @@ npm run dev
 
 The API runs at `http://localhost:3000`.
 
-### 4. Start the frontend
+### 4️⃣ Start the frontend
 
 In a second terminal:
 
@@ -95,7 +95,7 @@ npm run dev
 
 Vite prints the local website URL when it is ready (usually `http://localhost:5173`).
 
-## Production build
+## 📦 Production build
 
 Build the frontend from the project root:
 
@@ -105,7 +105,7 @@ npm run build --prefix client
 
 The generated static site is written to `client/dist`. The Express app serves this directory when it is available.
 
-## Project structure
+## 🗂️ Project structure
 
 ```text
 api/
@@ -120,6 +120,6 @@ client/
     pages/        Marketplace pages
 ```
 
-## Try the live app
+## 🌐 Try the live app
 
-**[Open Sahand Estate](https://mernrealestateproject-dif0ckw0.b4a.run/)**
+**[🏡 Open Real Estate Project](https://mernrealestateproject-dif0ckw0.b4a.run/)**
