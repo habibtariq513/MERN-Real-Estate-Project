@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 const CLOUDINARY_UPLOAD_URL =
   "https://api.cloudinary.com/v1_1/utrwkdln/image/upload";
 const CLOUDINARY_UPLOAD_PRESET = "mern_estate_preset";
+const MAX_IMAGES = 6;
 
 const storeImage = async (file) => {
   const data = new FormData();
@@ -47,6 +48,7 @@ export function ListingForm({ isUpdate = false }) {
     furnished: false,
   });
   const [imageUploadError, setImageUploadError] = useState(false);
+  const [isDraggingImages, setIsDraggingImages] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -102,11 +104,32 @@ export function ListingForm({ isUpdate = false }) {
     }
   };
 
+  const handleImageSelection = (selectedFiles, append = false) => {
+    if (selectedFiles.length === 0) return;
+
+    if (selectedFiles.some((file) => !file.type.startsWith("image/"))) {
+      setImageUploadError("Only image files can be uploaded");
+      return;
+    }
+
+    const nextFiles = append ? files.concat(selectedFiles) : selectedFiles;
+    if (nextFiles.length + formData.imageUrls.length > MAX_IMAGES) {
+      setImageUploadError("You can only upload 6 images per listing");
+      return;
+    }
+
+    setImageUploadError(false);
+    setFiles(nextFiles);
+  };
+
+  const handleImageDrop = (e) => {
+    e.preventDefault();
+    setIsDraggingImages(false);
+    handleImageSelection(Array.from(e.dataTransfer.files), true);
+  };
+
   const handleImageSubmit = async () => {
-    if (
-      files.length === 0 ||
-      files.length + formData.imageUrls.length >= 7
-    ) {
+    if (files.length === 0 || files.length + formData.imageUrls.length > MAX_IMAGES) {
       setImageUploadError("You can only upload 6 images per listing");
       return;
     }
@@ -121,7 +144,9 @@ export function ListingForm({ isUpdate = false }) {
         imageUrls: previous.imageUrls.concat(urls),
       }));
       setFiles([]);
-      fileInputRef.current.value = "";
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } catch (uploadError) {
       setImageUploadError(uploadError.message);
     } finally {
@@ -420,24 +445,53 @@ export function ListingForm({ isUpdate = false }) {
                 Upload up to 6 images. The first image will be the cover.
               </p>
             </div>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <input
-                className="min-w-0 flex-1 cursor-pointer rounded-xl border border-slate-200 bg-slate-50 p-2 text-sm file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-emerald-700 file:px-4 file:py-2.5 file:font-semibold file:text-white hover:file:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
-                type="file"
-                id="images"
-                accept="image/*"
-                multiple
-                ref={fileInputRef}
-                onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
-              />
-              <button
-                type="button"
-                onClick={handleImageSubmit}
-                disabled={uploading}
-                className="rounded-xl border border-emerald-700 px-5 py-3 text-sm font-bold uppercase text-emerald-800 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {uploading ? "Uploading..." : "Upload photos"}
-              </button>
+            <div
+              onDragEnter={(e) => {
+                e.preventDefault();
+                setIsDraggingImages(true);
+              }}
+              onDragOver={(e) => e.preventDefault()}
+              onDragLeave={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget)) {
+                  setIsDraggingImages(false);
+                }
+              }}
+              onDrop={handleImageDrop}
+              className={`rounded-xl border-2 border-dashed p-3 transition ${
+                isDraggingImages
+                  ? "border-emerald-600 bg-emerald-50"
+                  : "border-slate-200 bg-slate-50"
+              }`}
+            >
+              <p className="mb-3 text-center text-sm text-slate-600">
+                Drag images here or choose files
+              </p>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <input
+                  className="min-w-0 flex-1 cursor-pointer rounded-xl border border-slate-200 bg-white p-2 text-sm file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-emerald-700 file:px-4 file:py-2.5 file:font-semibold file:text-white hover:file:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+                  type="file"
+                  id="images"
+                  accept="image/*"
+                  multiple
+                  ref={fileInputRef}
+                  onChange={(e) =>
+                    handleImageSelection(Array.from(e.target.files ?? []))
+                  }
+                />
+                <button
+                  type="button"
+                  onClick={handleImageSubmit}
+                  disabled={uploading}
+                  className="rounded-xl border border-emerald-700 px-5 py-3 text-sm font-bold uppercase text-emerald-800 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {uploading ? "Uploading..." : "Upload photos"}
+                </button>
+              </div>
+              {files.length > 0 && (
+                <p className="mt-3 text-sm text-slate-600" aria-live="polite">
+                  {files.length} {files.length === 1 ? "image" : "images"} ready to upload
+                </p>
+              )}
             </div>
             {imageUploadError && (
               <p className="mt-3 text-sm text-red-700" role="alert">
