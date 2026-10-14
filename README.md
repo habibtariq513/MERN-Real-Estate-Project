@@ -147,4 +147,3 @@ Open the deployed demo: https://mern-real-estate-project-client.vercel.app/
 
 ---
 
-*Updated README — replaced live link and polished content.*
