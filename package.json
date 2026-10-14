@@ -4,9 +4,9 @@
   "description": "It's my 1st project of MERN Projects Series.",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon api/index.js",
-    "start": "node api/index.js",
-    "build": "npm install && npm install --prefix client && npm run build --prefix client"
+    "dev": "nodemon backend/server.js",
+    "start": "node backend/server.js",
+    "build": "npm install --prefix client && npm run build --prefix client"
   },
   "repository": {
     "type": "git",
